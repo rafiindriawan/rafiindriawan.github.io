@@ -996,7 +996,12 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Your Message Success</strong> Thank You :3.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <form name="raind-contact-form" action="forms/contact.php" method="post" role="form" class="php-email-form">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -1011,12 +1016,15 @@
               <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
               </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
+
+              <div class="text-center"><button type="submit" class="btn-kirim">Send Message</button></div>
+
+              <div class="text-center">
+                <button class="btn btn-primary btn-loading d-none" type="submit" disabled>
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span role="status">Wait a Moment</span>
+                </button>
               </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
             </form>
 
           </div>
@@ -1069,6 +1077,34 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwQzWeXdSCUIVy6wG_WqbPoQYsR9ok9pf9-78o5cfltj_Wh7GuLV8H3nJ9XBO0xegDt6Q/exec'
+    const form = document.forms['raind-contact-form']
+    const btnkirim = document.querySelector('.btn-kirim');
+    const btnloading = document.querySelector('.btn-loading');
+    const myalert = document.querySelector('.my-alert');
+  
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      //ketika tombol sumbit diklik
+      //tampilkan loading
+      btnloading.classList.toggle('d-none');
+      btnkirim.classList.toggle('d-none');
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+          //tampilkan kirim
+          btnloading.classList.toggle('d-none');
+          btnkirim.classList.toggle('d-none');
+          // tampikan alert
+          myalert.classList.toggle('d-none');
+          // reset form
+          form.reset();
+          console.log('Success!', response)
+        })
+        .catch(error => console.error('Error!', error.message))
+    })
+  </script>
 
 </body>
 
